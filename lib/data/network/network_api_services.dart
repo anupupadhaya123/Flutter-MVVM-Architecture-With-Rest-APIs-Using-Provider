@@ -7,7 +7,6 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
 class NetworkApiService extends BaseApiServices {
-
   @override
   Future getGetPostApiResponse(String url) async {
     dynamic responseJson;
@@ -28,9 +27,9 @@ class NetworkApiService extends BaseApiServices {
     dynamic responseJson;
 
     try {
-      Response response = await http
-          .post(Uri.parse(url), body: data)
+      Response response = await post(Uri.parse(url), body: data)
           .timeout(const Duration(seconds: 10));
+          responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     }
@@ -54,7 +53,7 @@ class NetworkApiService extends BaseApiServices {
 
       default:
         throw FetchDataException(
-            'Error occured while communicating with server' +
+            'Error occurred while communicating with server ' +
                 'with status code' +
                 response.statusCode.toString());
     }

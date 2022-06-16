@@ -1,24 +1,26 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application/resources/components/round_button.dart';
 import 'package:flutter_application/utils/routes/routes_name.dart';
-import 'package:flutter_application/view_model/auth_view_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+import '../resources/components/round_button.dart';
 import '../utils/utils.dart';
+import '../view_model/auth_view_model.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({Key? key}) : super(key: key);
+
+class SignUpView extends StatefulWidget {
+  const SignUpView({Key? key}) : super(key: key);
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<SignUpView> createState() => _SignUpViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _SignUpViewState extends State<SignUpView> {
+
   final ValueNotifier<bool> _obsecurePassword =
-      ValueNotifier<bool>(true); //setting false will show password
+  ValueNotifier<bool>(true); //setting false will show password
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -36,13 +38,12 @@ class _LoginViewState extends State<LoginView> {
     emailFocusNode.dispose();
     passwordFocusNode.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     final authViewModel = Provider.of<AuthViewModel>(context);
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Login"),
+          title: const Text("Sign Up"),
           centerTitle: true,
         ),
         body: SafeArea(
@@ -85,7 +86,7 @@ class _LoginViewState extends State<LoginView> {
                           suffixIcon: InkWell(
                               onTap: () {
                                 _obsecurePassword.value =
-                                    !_obsecurePassword.value;
+                                !_obsecurePassword.value;
                               },
                               child: Icon(_obsecurePassword.value
                                   ? Icons.visibility_off_outlined
@@ -96,8 +97,8 @@ class _LoginViewState extends State<LoginView> {
                 height: 80.h,
               ),
               RoundButton(
-                title: "Login",
-                loading: authViewModel.loading,
+                title: "Sign Up",
+                loading: authViewModel.signUpLoading,
                 onPress: () {
                   if (_emailController.text.isEmpty &&
                       _passwordController.text.isEmpty) {
@@ -112,15 +113,13 @@ class _LoginViewState extends State<LoginView> {
                     Utils.flushBarErrorMessage(
                         "Please enter 6 digit password", context);
                   } else {
-                    // Map data = {
-                    //   'email': _emailController.text.toString(),
-                    //   'password': _passwordController.text.toString(),
-                    // };
                     Map data = {
-                      'email': "eve.holt@reqres.in",
-                      'password': "cityslicka",
+                      'email': _emailController.text.toString(),
+                      'password': _passwordController.text.toString(),
                     };
-                    authViewModel.loginApi(data, context);
+
+
+                    authViewModel.signUpApi(data, context);
                     log('Api hit');
                   }
                 },
@@ -129,10 +128,10 @@ class _LoginViewState extends State<LoginView> {
                 height: 20.h,
               ),
               InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, RoutesName.signUp);
-                },
-                  child: const Text("Don't have an account? Sign Up"))
+              onTap: () {
+                Navigator.pushNamed(context, RoutesName.login);
+              },
+                  child:const  Text("Already have an account? Log in"))
             ],
           ),
         ));
